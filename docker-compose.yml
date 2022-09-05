@@ -1,9 +1,10 @@
 version: '3.6'
 services:
   iris:
-    build: 
-      context: .
-      dockerfile: Dockerfile
+#    build: 
+#      context: .
+#      dockerfile: Dockerfile
+    image: soapint
     restart: always
     command: --check-caps false
     ports: 
