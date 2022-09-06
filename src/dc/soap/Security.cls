@@ -21,7 +21,7 @@ ClassMethod CreateWebAppSoapapp(
 	Set cspProperties("Enabled") = 1
 	Set cspProperties("AutheEnabled") = $$$AutheUnauthenticated + $$$AutheCache
 	Set cspProperties("DeepSeeEnabled") = 1
-	Set cspProperties("DispatchClass") = "EnsLib.SOAP.GeneralService"
+	Set cspProperties("DispatchClass") = "EnsLib.SOAP.GenericService"
 	Set cspProperties("iKnowEnabled") = 0
 	Set cspProperties("Path") = "/voldata/icsp/feederapp"
 	Set cspProperties("Resource") = ""
