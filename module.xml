@@ -14,9 +14,11 @@
       </Dependencies>
       <SourcesRoot>src</SourcesRoot>
       <Resource Name="Ens.Config.DefaultSettings.ESD"/>
+      <Resource Name="RolesExport.xml"/>
       <Resource Name="TestLookupTable.LUT"/>
       <Resource Name="dc.Reddit.PKG"/>
       <Resource Name="dc.Demo.PKG"/>
+      <Resource Name="dc.soap.PKG"/>
       <SystemRequirements Version=">=2020.1" Interoperability="enabled" />
     </Module>
   </Document>
