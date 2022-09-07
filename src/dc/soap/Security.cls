@@ -43,6 +43,25 @@ ClassMethod CreateWebAppSoapapp(
 	Quit $$$OK
 }
 
+ClassMethod ImportData() As %Status
+{
+	Set tSC = ..ImportResources()
+	Set tSC = ..ImportRoles()
+	Quit tSC
+}
+
+ClassMethod ImportResources(pFileName As %String = "") As %Status
+{
+	If (pFileName = "") {
+		Set mgr = $ZU(12)
+		Set path = mgr_"data/"
+		Set pFileName = path_"ResourcesExport.xml"
+	}
+	Set $NAMESPACE = "%SYS"
+	Set tSC = ##class(Security.Resources).Import(pFileName)
+	Quit tSC
+}
+
 ClassMethod ImportRoles(pFileName As %String = "") As %Status
 {
 	If (pFileName = "") {
