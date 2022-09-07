@@ -1,6 +1,16 @@
 Class dc.soap.Security
 {
 
+ClassMethod CreateServicesRole() As %Status
+{
+	Set tSC = $$$OK
+	Set tRole = ##class(Security.Roles).%New()
+	Set tRole.Description = "Services Role"
+	Set tRole.Name = "Services_Role"
+	Set tSC = tRole.%Save()
+	Quit tSC
+}
+
 ClassMethod CreateWebAppSoapapp(
 	pVars,
 	pLogLevel,
@@ -32,9 +42,14 @@ ClassMethod CreateWebAppSoapapp(
 	Quit $$$OK
 }
 
-ClassMethod CreateWebApp() As %Status
+ClassMethod ImportRoles(pFileName As %String = "") As %Status
 {
-	Set tSC = $$$OK
+	If (pFileName = "") {
+		Set mgr = $ZU(12)
+		Set path = mgr_"data/"
+		Set pFileName = path_"RolesExport.xml"
+	}
+	Set tSC = ##class(Security.Roles).Import(pFileName)
 	Quit tSC
 }
 
