@@ -3,6 +3,7 @@ Class dc.soap.Security
 
 ClassMethod CreateServicesRole() As %Status
 {
+	New $NAMESPACE
 	Set $NAMESPACE = "%SYS"
 	Set tRole = ##class(Security.Roles).%New()
 	Set tRole.Description = "Services Role"
@@ -16,6 +17,7 @@ ClassMethod CreateWebAppSoapapp(
 	pLogLevel,
 	tInstaller) As %Status
 {
+	New $NAMESPACE
 	If $IsObject($Get(tInstaller)) {
 		Set Namespace = tInstaller.Evaluate("${Namespace}")
 		Do tInstaller.PushNS("%SYS")
@@ -34,7 +36,7 @@ ClassMethod CreateWebAppSoapapp(
 	Set cspProperties("DeepSeeEnabled") = 1
 	Set cspProperties("DispatchClass") = "EnsLib.SOAP.GenericService"
 	Set cspProperties("iKnowEnabled") = 0
-	Set cspProperties("MatchRoles") = "%All"
+	//Set cspProperties("MatchRoles") = "%All"
 	Set cspProperties("Path") = "/voldata/icsp/feederapp"
 	Set cspProperties("Resource") = ""
 	Set cspProperties("ServeFiles") = 1
@@ -53,6 +55,7 @@ ClassMethod ImportData() As %Status
 
 ClassMethod ImportResources(pFileName As %String = "") As %Status
 {
+	New $NAMESPACE
 	If (pFileName = "") {
 		Set mgr = $ZU(12)
 		Set path = mgr_"data/"
@@ -65,6 +68,7 @@ ClassMethod ImportResources(pFileName As %String = "") As %Status
 
 ClassMethod ImportRoles(pFileName As %String = "") As %Status
 {
+	New $NAMESPACE
 	If (pFileName = "") {
 		Set mgr = $ZU(12)
 		Set path = mgr_"data/"
