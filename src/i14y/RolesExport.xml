@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RolesExport>
+  <Roles>
+    <Name>Services_Role</Name>
+    <Resources>
+      <Resource>
+        <Name>%DB_HSCUSTOM</Name>
+        <Permission>3</Permission>
+      </Resource>
+      <Resource>
+        <Name>%DB_IRISDM</Name>
+        <Permission>3</Permission>
+      </Resource>
+      <Resource>
+        <Name>%DB_SCMDATA</Name>
+        <Permission>3</Permission>
+      </Resource>
+      <Resource>
+        <Name>%DB_SCMLIB</Name>
+        <Permission>3</Permission>
+      </Resource>
+    </Resources>
+    <Version>1</Version>
+  </Roles>
+</RolesExport>
