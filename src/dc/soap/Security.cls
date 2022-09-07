@@ -3,7 +3,7 @@ Class dc.soap.Security
 
 ClassMethod CreateServicesRole() As %Status
 {
-	Set tSC = $$$OK
+	Set $NAMESPACE = "%SYS"
 	Set tRole = ##class(Security.Roles).%New()
 	Set tRole.Description = "Services Role"
 	Set tRole.Name = "Services_Role"
@@ -20,6 +20,7 @@ ClassMethod CreateWebAppSoapapp(
 		Set Namespace = tInstaller.Evaluate("${Namespace}")
 		Do tInstaller.PushNS("%SYS")
 	}
+	Set $NAMESPACE = "%SYS"
 	Do ##class(Security.System).GetInstallationSecuritySetting(.security)
 	If (security="None") {
 		Set cspProperties("AutheEnabled") = $$$AutheUnauthenticated
@@ -49,6 +50,7 @@ ClassMethod ImportRoles(pFileName As %String = "") As %Status
 		Set path = mgr_"data/"
 		Set pFileName = path_"RolesExport.xml"
 	}
+	Set $NAMESPACE = "%SYS"
 	Set tSC = ##class(Security.Roles).Import(pFileName)
 	Quit tSC
 }
