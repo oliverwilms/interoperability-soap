@@ -19,6 +19,10 @@
         <Name>%DB_SCMLIB</Name>
         <Permission>3</Permission>
       </Resource>
+      <Resource>
+        <Name>%DB_USER</Name>
+        <Permission>3</Permission>
+      </Resource>
     </Resources>
     <Version>1</Version>
   </Roles>
