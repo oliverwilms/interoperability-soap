@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ResourcesExport>
+  <Resources>
+    <Description>Resource for databases that are not otherwise known to the system</Description>
+    <Name>%DB_%DEFAULT</Name>
+    <PublicPermission>0</PublicPermission>
+    <Type>3</Type>
+    <Version>1</Version>
+  </Resources>
+  <Resources>
+    <Description>The ENSLIB database</Description>
+    <Name>%DB_ENSLIB</Name>
+    <PublicPermission>1</PublicPermission>
+    <Type>3</Type>
+    <Version>1</Version>
+  </Resources>
+  <Resources>
+    <Description>The HSCUSTOM database</Description>
+    <Name>%DB_HSCUSTOM</Name>
+    <PublicPermission>0</PublicPermission>
+    <Type>3</Type>
+    <Version>1</Version>
+  </Resources>
+  <Resources>
+    <Description>The HSLIB database</Description>
+    <Name>%DB_HSLIB</Name>
+    <PublicPermission>1</PublicPermission>
+    <Type>3</Type>
+    <Version>1</Version>
+  </Resources>
+  <Resources>
+    <Description>The HSSYS database</Description>
+    <Name>%DB_HSSYS</Name>
+    <PublicPermission>0</PublicPermission>
+    <Type>3</Type>
+    <Version>1</Version>
+  </Resources>
+  <Resources>
+    <Description>The AUDIT database</Description>
+    <Name>%DB_IRISAUDIT</Name>
+    <PublicPermission>0</PublicPermission>
+    <Type>3</Type>
+    <Version>1</Version>
+  </Resources>
+  <Resources>
+    <Description>Resource for Remote DB</Description>
+    <Name>%DB_IRISDM</Name>
+    <PublicPermission>0</PublicPermission>
+    <Type>2</Type>
+    <Version>1</Version>
+  </Resources>
+  <Resources>
+    <Description>The System Library database</Description>
+    <Name>%DB_IRISLIB</Name>
+    <PublicPermission>1</PublicPermission>
+    <Type>3</Type>
+    <Version>1</Version>
+  </Resources>
+  <Resources>
+    <Description>The IRISLOCALDATA database</Description>
+    <Name>%DB_IRISLOCALDATA</Name>
+    <PublicPermission>1</PublicPermission>
+    <Type>3</Type>
+    <Version>1</Version>
+  </Resources>
+  <Resources>
+    <Description>The System database</Description>
+    <Name>%DB_IRISSYS</Name>
+    <PublicPermission>0</PublicPermission>
+    <Type>3</Type>
+    <Version>1</Version>
+  </Resources>
+  <Resources>
+    <Description>The TEMP database</Description>
+    <Name>%DB_IRISTEMP</Name>
+    <PublicPermission>3</PublicPermission>
+    <Type>3</Type>
+    <Version>1</Version>
+  </Resources>
+  <Resources>
+    <Description>The SCMDATA database</Description>
+    <Name>%DB_SCMDATA</Name>
+    <PublicPermission>0</PublicPermission>
+    <Type>3</Type>
+    <Version>1</Version>
+  </Resources>
+  <Resources>
+    <Description>The SCMLIB database</Description>
+    <Name>%DB_SCMLIB</Name>
+    <PublicPermission>0</PublicPermission>
+    <Type>3</Type>
+    <Version>1</Version>
+  </Resources>
+  <Resources>
+    <Description>The USER database</Description>
+    <Name>%DB_USER</Name>
+    <PublicPermission>0</PublicPermission>
+    <Type>3</Type>
+    <Version>1</Version>
+  </Resources>
+</ResourcesExport>
