@@ -6,7 +6,7 @@
 /// In order for the CSP mechanism to work, Web Services using this class must be configured with the invoking URL including ?CfgItem= giving the config item name.
 /// (Configured Web Services exposed using the SOAP Inbound Adapter may also be invoked with this URL parameter but because
 ///  each configured Inbound Adapter listens on its own TCP/IP port this parameter is just a safety check for them.)
-Class dc.soap.GenericService Extends EnsLib.SOAP.Service [ System = 4 ]
+Class dc.soap.GenericService Extends EnsLib.SOAP.GenericService [ System = 4 ]
 {
 
 Parameter DOCCLASS = "EnsLib.SOAP.GenericMessage";
