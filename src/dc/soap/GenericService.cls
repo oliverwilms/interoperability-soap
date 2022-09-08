@@ -93,10 +93,12 @@ ClassMethod OnPage() As %Status [ Internal, ServerOnly = 1 ]
 {
 	Set ^DCSOAP($I(^DCSOAP))="OnPage()"
 	If $Data(%request.Data("WSDL"))!$Data(%request.Data("wsdl")) {
+	Set ^DCSOAP($I(^DCSOAP),"WSDL")=1
 		#; If it's a WSDL Request, just generate the WSDL for the client
 		Quit ##class(%XML.Implementation).GenerateWSDL($classname(),..#SOAPINTERNALWSDL)
 
 	} Else {
+	Set ^DCSOAP($I(^DCSOAP),"WSDL")=0
 		#; Create the web service instance
 		Set service=$select($isobject($get(%cspsoapservice)):%cspsoapservice,1:..%New())
 
