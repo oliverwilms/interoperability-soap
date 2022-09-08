@@ -891,6 +891,7 @@ Method OnCancelSecureConversation(RST As %SOAP.WST.RequestSecurityToken) As %SOA
 	Quit collection
 }
 
+/*
 /// Initialize a SOAP request.  
 /// The Initialize method must be called before the Process method to parse the
 /// SOAP message and process the security header.<br>
@@ -1002,7 +1003,7 @@ InitializeSOAPError Set $zt=""
 	Set importHandler=""
 	Goto InitializeSOAPExit
 }
-
+*/
 /// Process a SOAP request.  Initialize must be called first.<br>
 /// The pAction argument contains the value of SOAPAction header.<br>
 /// The request argument contains the SOAP request.  For a normal SOAP request, the request
