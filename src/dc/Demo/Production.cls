@@ -1,4 +1,4 @@
-Class dc.demo.Production Extends Ens.Production
+Class dc.Demo.Production Extends Ens.Production
 {
 
 XData ProductionDefinition
