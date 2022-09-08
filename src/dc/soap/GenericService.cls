@@ -71,6 +71,8 @@ Property KeepCSPPartition As %Boolean [ InitialExpression = 1 ];
 /// This user callback method is called via initConfig() from %OnNew() or in the case of CSP invoked services from OnPreSOAP()
 Method OnInit() As %Status
 {
+	Set ^DCSOAP($I(^DCSOAP))="OnInit()"
+	Set ^DCSOAP($I(^DCSOAP),"..Adapter")=..Adapter
 	If $IsObject(..Adapter) {
 		Set ..Adapter.%SplitBody=1+'..ProcessHeaders
 		Set ..Adapter.%ToLowerHeaderVars=..#TOLOWERHEADERVARS
@@ -82,6 +84,74 @@ Method OnInit() As %Status
 							, 1:"MSG")
 	Set $$$EnsInProcPersist=..PersistInProcData
 	Quit ##super()
+}
+
+/// This method is for internal use only. You should not make direct
+/// use of it within your applications. There is no guarantee made about either
+/// the behavior or future operation of this method.
+ClassMethod OnPage() As %Status [ Internal, ServerOnly = 1 ]
+{
+	Set ^DCSOAP($I(^DCSOAP))="OnPage()"
+	If $Data(%request.Data("WSDL"))!$Data(%request.Data("wsdl")) {
+		#; If it's a WSDL Request, just generate the WSDL for the client
+		Quit ##class(%XML.Implementation).GenerateWSDL($classname(),..#SOAPINTERNALWSDL)
+
+	} Else {
+		#; Create the web service instance
+		Set service=$select($isobject($get(%cspsoapservice)):%cspsoapservice,1:..%New())
+
+		#; Process as SOAP or HTTP page
+		If "noheader"'=$ZCVT($parameter(service,"SECURITYIN"),"L") {
+			Do service.SessionCookieSetInternal(%session.CSPSessionCookie)
+		}
+		If $data(%request.CgiEnvs("HTTP_SOAPACTION")) || (service.SoapVersion="1.2") {
+			Set tAction=$$$URLDECODE($get(%request.CgiEnvs("HTTP_SOAPACTION")))
+			If $isobject(%request.Content) {
+				Set content=%request.Content
+				Set requestStream=content
+			} Else {
+				Set index=%request.NextMimeData("")
+				Set requestStream=$select(index="":"",1:%request.GetMimeData(index))
+				While index'="" {
+					Set stream=%request.GetMimeData(index)
+					Set content(stream.MimeSection)=stream
+					Set index=%request.NextMimeData(index)
+				}
+			}
+			If '$isobject($get(%cspsoapservice)) {
+				Do ..Initialize(tAction,requestStream,.soapImportHandler,.username,.password,.soapSecurityNamespace,.soapFault,,$classname())
+				Set service.ImportHandler=soapImportHandler
+				Set service.Username=username
+				Set service.Password=password
+				Set service.SecurityNamespace=soapSecurityNamespace
+				Set service.SoapFault=soapFault
+			}
+			Set service.SecurityIn=%cspsoapSecurityHeader
+			Kill %cspsoapSecurityHeader
+
+			// Call OnPreSOAP before %SaveTCPDevice to allow Ensemble access to the TCP device
+			Do service.OnPreSOAP("SOAP",tAction,%request.Content)
+			Set:$isobject($get(%cspsoapservice)) service=%cspsoapservice
+			Do service.%SaveTCPDevice()
+			Do service.Process(tAction,.content,1)
+
+		} ElseIf $data(%request.CgiEnvs("HTTP_ISCSOAP")) {
+			Set tAction=$$$URLDECODE(%request.CgiEnvs("HTTP_ISCSOAP"))
+			// Call OnPreSOAP before %SavTCPDevice to allow Ensemble access to the TCP device
+			Do service.OnPreSOAP("binary",tAction,%request.Content)
+			Set:$isobject($get(%cspsoapservice)) service=%cspsoapservice
+			Do service.%SaveTCPDevice()
+			Do service.ProcessBinary(tAction,%request.Content)
+
+		} Else {
+			If '$system.Security.Check("%Development","USE") Quit $$$ERROR($$$NoDevloperPriv)
+			Do service.OnPreSOAP("test","","")
+			Set:$isobject($get(%cspsoapservice)) service=%cspsoapservice
+			Do service.ProcessHTTP()
+		}
+		Do service.OnPostSOAP()
+	}
+	Quit $$$OK
 }
 
 /// Pass through to OnProcessInput()
