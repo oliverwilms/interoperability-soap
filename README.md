@@ -20,8 +20,8 @@ My team needs to migrate a Generic SOAP Service interface from an older HealthSh
 I imported Services_Role and related resources. I added Services-Role to UnknownUser. I created a Web Application with dispatch class.
 
 I added a Service to the production.
-<img width="864" alt="Screenshot Global ^DCSOAP" src="https://github.com/oliverwilms/bilder/blob/main/CaptureDCSOAP.PNG"> 
-
+I cloned SOAP Generic Service, SOAP Service, and WebService classes and added debugging statements so I could see what methods get executed:
+![screenshot](https://github.com/oliverwilms/bilder/blob/main/CaptureDCSOAP.PNG)
 ## Prerequisites
 Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker desktop](https://www.docker.com/products/docker-desktop) installed.
 
