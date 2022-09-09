@@ -132,6 +132,7 @@ Property Timeout As %Integer;
 /// Set method for Timeout property
 Method TimeoutSet(val As %Integer) As %Status [ Internal ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"TimeoutSet()"
 	If ..saveIO'="",$get(%request)'="",%request.CSPGatewayRequest,
 	   $isobject($get(%response)),'%response.InProgress {
 		Set io=$io
@@ -162,6 +163,7 @@ Property saveIO As %String [ Internal, Private, Transient ];
 /// </example>
 ClassMethod ReturnFault(fault As %SOAP.Fault) [ ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"ReturnFault()"
 	Do ..Fault(fault,,,,1)
 	Set %objlasterror=$$$OK ; fault already returned
 	ztrap "SOAP"
@@ -176,6 +178,7 @@ ClassMethod OnInternalFault(
 	fault As %SOAP.Fault,
 	status As %Status) [ Private, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"OnInternalFault()"
 	Quit
 }
 
@@ -185,6 +188,7 @@ ClassMethod ReturnInternalStatusFault(
 	pStatus As %Status,
 	soap12 As %Boolean = 0) [ Internal, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"ReturnInternalStatusFault()"
 	Set FaultCode=$$$FAULTServer
 	Set FaultReason=$$$FormatMessage("","%ObjectErrors",$$$ERRORCODE($$$InternalError))
 	Set fault=..MakeStatusFault(FaultCode,FaultReason,pStatus)
@@ -198,6 +202,7 @@ ClassMethod MakeStatusFault(
 	pStatus As %Status = "",
 	pFaultActor As %String = "") As %SOAP.Fault [ ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"MakeStatusFault()"
 	If $get(pFaultCode)="" Set pFaultCode=$$$FAULTServer
 	If $get(pFaultString)="" Set pFaultString=$$$FormatMessage("","%ObjectErrors",$$$ERRORCODE($$$InternalError))
 	Set detail=$c(13,10)_"    <error xmlns='"_..#NAMESPACE_"'>"_$c(13,10)
@@ -222,6 +227,7 @@ ClassMethod MakeSecurityFault(
 	pFaultCode As %String,
 	securityNamespace As %String) As %SOAP.Fault [ ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"MakeSecurityFault()"
 	If pFaultCode="FailedAuthentication" {
 		Set FaultString="The security token could not be authenticated or authorized"
 	} ElseIf pFaultCode="FailedCheck" {
@@ -258,6 +264,7 @@ ClassMethod MakeFault(
 	pDetail As %String = "",
 	pFaultActor As %String = "") As %SOAP.Fault [ ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"MakeFault()"
 	Set fault=##class(%SOAP.Fault).%New()
 	Set fault.faultcode=pFaultCode
 	Set fault.faultstring=pFaultString
@@ -273,6 +280,7 @@ ClassMethod MakeFault12(
 	pDetail As %String = "",
 	pFaultActor As %String = "") As %SOAP.Fault [ ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"MakeFault12()"
 	Set fault=##class(%SOAP.Fault12).%New()
 	Set fault.Code=..MakeFault12Code(pFaultCode)
 	Do fault.Reason.Insert(..MakeFault12Text(pFaultString))
@@ -284,6 +292,7 @@ ClassMethod MakeFault12(
 /// Create a SOAP 1.2 fault code field.
 ClassMethod MakeFault12Code(code As %String) As %SOAP.Fault12.Code [ Internal, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"MakeFault12Code()"
 	Set coderef=##class(%SOAP.Fault12.Code).%New()
 	Set coderef.Value=code
 	Quit coderef
@@ -294,6 +303,7 @@ ClassMethod MakeFault12Text(
 	text As %String,
 	language As %String) As %SOAP.Fault12.Code [ Internal, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"MakeFault12Text()"
 	Set textref=##class(%SOAP.Fault12.Text).%New()
 	Set textref.lang=$get(language,$$$SessionLanguage)
 	Set textref.Text=text
@@ -312,6 +322,7 @@ ClassMethod Fault(
 	soap12 As %Boolean = 0,
 	callPostWebMethod As %Boolean = 0) [ Internal, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="Fault("_$G(fault)_","_$G(forceHeaders)_","_$G(forceXML)_","_$G(soap12)_","_$G(callPostWebMethod)_")"
 	Set isService=$isobject($get(%cspsoapservice)) && %cspsoapservice.%Extends("%SOAP.WebService")
 	
 	#; Restore TCP output device
@@ -350,6 +361,7 @@ ClassMethod Fault(
 	}
 
 	Set env=..#SOAPPREFIX
+	Set ^DCSOAP($I(^DCSOAP),"env")=env
 	Set ns=$select(soap12:$$$SOAP12ENVns,1:$$$SOAPENVns)
 	Set faultHeaders=(isService && ((%cspsoapservice.FaultHeaders.Count()>0) || (%cspsoapservice.FaultAddressing'="")))
 
@@ -360,6 +372,7 @@ ClassMethod Fault(
 	} 
 	
 	Set logOutput=($get(^ISCSOAP("Log"))["o")
+	Set ^DCSOAP($I(^DCSOAP),"logOutput")=logOutput
 	If logOutput {
 		Set io=$io
 		Set stream=##class(%FileBinaryStream).%New()
@@ -454,6 +467,8 @@ ClassMethod Fault(
 
 	If logOutput {
 		Use io
+	Set ^DCSOAP($I(^DCSOAP),"isService")=$G(isService)
+	Set ^DCSOAP($I(^DCSOAP),"stream")=$G(stream)
 		$$$SOAPLogOutputHTTPHeaders
 		Do ..LogOutput(1,$select(isService:%cspsoapservice.Action,1:""),stream)
 		$$$SETIO("RAW")
@@ -465,6 +480,7 @@ ClassMethod Fault(
 /// Write the headers for the fault
 Method WriteFaultHeaders(namespaces As %XML.Namespaces) [ Internal, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"WriteFaultHeaders()"
 	Set headers=..HeadersOut
 	Set addressing=..AddressingOut
 	Set ..HeadersOut=..FaultHeaders
@@ -481,6 +497,7 @@ ClassMethod FileWSDL(
 	fileName As %String,
 	includeInternalMethods As %Boolean = 1) As %Status [ ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"FileWSDL()"
 	Set sc=$$$OK,tIO=$IO
 
 	Open fileName:("wsn":/NOXY):0 Else  Quit $$$ERROR($$$FileCanNotOpen,fileName)
@@ -499,11 +516,15 @@ ClassMethod FileWSDL(
 /// the behavior or future operation of this method.
 ClassMethod OnPage() As %Status [ Internal, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"OnPage()"
+
 	If $Data(%request.Data("WSDL"))!$Data(%request.Data("wsdl")) {
+	Set ^DCSOAP($I(^DCSOAP),"WSDL")=1
 		#; If it's a WSDL Request, just generate the WSDL for the client
 		Quit ##class(%XML.Implementation).GenerateWSDL($classname(),..#SOAPINTERNALWSDL)
 
 	} Else {
+	Set ^DCSOAP($I(^DCSOAP),"WSDL")=0
 		#; Create the web service instance
 		Set service=$select($isobject($get(%cspsoapservice)):%cspsoapservice,1:..%New())
 
@@ -584,6 +605,7 @@ Method OnRequestMessage(
 	action As %String,
 	request As %Stream.Object) [ ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"OnRequestMessage()"
 	Quit
 }
 
@@ -594,6 +616,7 @@ Method OnRequestMessage(
 /// If WS-Policy is used, then WS-Policy support does this automatically.
 Method %OnCreateRMSession(response As %SOAP.RM.CreateSequenceResponse) [ ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"%OnCreateRMSession()"
 	Quit
 }
 
@@ -615,12 +638,14 @@ Method OnPreSOAP(
 	action As %String,
 	request) [ Internal, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"OnPreSOAP()"
 }
 
 /// Callback after a SOAP request.  This callback meant to be used by Interoperability
 /// and should thus never be specified for a subclass of Enslib.SOAP.Service.
 Method OnPostSOAP() [ Internal, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"OnPostSOAP()"
 }
 
 /// This method is for internal use only. You should not make direct
@@ -628,6 +653,7 @@ Method OnPostSOAP() [ Internal, ServerOnly = 1 ]
 /// the behavior or future operation of this method.		
 ClassMethod OnPreHTTP() As %Boolean [ Internal, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"OnPreHTTP()"
 	#; If it's a soap request then just return
 	If $isobject($get(%cspsoapservice)) && (%cspsoapservice.SoapVersion="1.2") {
 		If ..#GZIPOUTPUT Set %response.GzipOutput=1
@@ -675,6 +701,7 @@ ClassMethod OnPreHTTP() As %Boolean [ Internal, ServerOnly = 1 ]
 /// for the SOAP case to allow Content-Type to be changed for SOAP with Attachments response..
 ClassMethod OnHTTPHeader(ByRef OutputBody As %Boolean) As %Status [ Internal, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"OnHTTPHeader()"
 	If '$Data(%request.Data("WSDL")) && '$Data(%request.Data("wsdl")) &&
 	   ($data(%request.CgiEnvs("HTTP_SOAPACTION")) ||
 	    $data(%request.CgiEnvs("HTTP_ISCSOAP")) ||
@@ -693,6 +720,7 @@ ClassMethod OnHTTPHeader(ByRef OutputBody As %Boolean) As %Status [ Internal, Se
 /// the behavior or future operation of this method.		
 Method ProcessHTTP() [ Internal, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"ProcessHTTP()"
 	// Indicate that we are in web service
 	Set %cspsoapservice=$this
 
@@ -794,6 +822,7 @@ Method OnSOAPRequest(
 	ByRef request,
 	ByRef responseStream As %BinaryStream) [ ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"OnSOAPRequest()"
 	// Reset the service if this is an additional call to the same instance.
 	If '$data(%cspsoapSecurityHeader),..ImportHandler'="" {
 		Do ..Reset()
@@ -863,6 +892,7 @@ Method OnSOAPRequest(
 /// return a RequestSecurityTokenResponseCollection, then SoapFault is set to a wst:BadRequest fault.
 Method OnStartSecureConversation(RST As %SOAP.WST.RequestSecurityToken) As %SOAP.WST.RequestSecurityTokenResponseCollection [ ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"OnStartSecureConversation()"
 	If $data(..policyAlternative) {
 		Merge alternative=..policyAlternative
 		Set response=##class(%SOAP.Security.Policy).GetResponseSecurityToken($this,RST,.alternative)
@@ -883,6 +913,7 @@ Method OnStartSecureConversation(RST As %SOAP.WST.RequestSecurityToken) As %SOAP
 /// If a fault is to be returned, the %SOAP.fault instance should be assigned to the SoapFault property and "" returned.<br><br>
 Method OnCancelSecureConversation(RST As %SOAP.WST.RequestSecurityToken) As %SOAP.WST.RequestSecurityTokenResponseCollection [ ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"OnCancelSecureConversation()"
 	Set collection=RST.CreateCancelResponse($this,.error)
 	If error'="" {
 		Set ..SoapFault=##class(%SOAP.WST.RequestSecurityTokenResponse).MakeFault("InvalidRequest")
@@ -1023,6 +1054,7 @@ Method Process(
 	ByRef request,
 	needHeaders As %Boolean = 1) [ ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"Process()"
 	// Indicate that we are in web service
 	Set %cspsoapservice=$this
 
@@ -1627,6 +1659,7 @@ Method ProcessBinary(
 	action As %String,
 	request) [ ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"ProcessBinary()"
 	$$$SOAPTimer("s1")
 	// Indicate that we are in web service
 	Set %cspsoapservice=$this
@@ -1720,6 +1753,7 @@ Method GetMsgClass(
 	Output methodName As %String,
 	bodyStream As %GlobalCharacterStream = "") As %String [ Internal, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"GetMsgClass()"
 	Set (methodName,className,msgClass,methodList)=""
 	Set class=$classname()
 	
@@ -1780,6 +1814,7 @@ Method %GetElementFromBody(
 	messageChildlist As %Integer,
 	bodyStream As %GlobalCharacterStream = "") As %String [ Internal, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"%GetElementFromBody()"
 	Set element=""
 	If $get(messageChildlist)'="" {
 		Set element=$$$xmlaGetLocalName(..ImportHandler.DocumentId,messageChildlist)
@@ -1795,6 +1830,7 @@ Method %GetElementFromBody(
 /// Save the TCP device at time of web service invocation
 Method %SaveTCPDevice() [ Internal, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"%SaveTCPDevice()"
 	#; Redirect output to the null device during user code
 	Set ..saveIO=$io
 	If $$$isWINDOWS {
@@ -1812,6 +1848,7 @@ Method %SaveTCPDevice() [ Internal, ServerOnly = 1 ]
 /// Restore the TCP device from time of invocation
 Method %RestoreTCPDevice() [ Internal, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"%RestoreTCPDevice()"
 	#; Restore TCP output device
 	If ..saveIO'="" {
 		Use ..saveIO
@@ -1824,6 +1861,7 @@ Method InvokeMsgClass(
 	msgClass As %SOAP.MsgDescriptor,
 	service As %SOAP.WebService) As %Boolean [ Internal, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"InvokeMsgClass()"
 	#; Invoke the web method
 	Set sc=$$$OK
 	Try {
@@ -1860,6 +1898,7 @@ Method HandleException(
 	ex As %Exception.AbstractException,
 	Output faultAlreadyReturned) As %Status [ Internal, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"HandleException()"
 	Set faultAlreadyReturned=0
 	If $classname(ex)="%Exception.SystemException" {
 		Set sc=$select((ex.Name="<ZSOAP>")&&($Get(%objlasterror)]""):"",1:ex.AsStatus())
@@ -1886,6 +1925,7 @@ Method WSAddSignatureConfirmation(
 	symmetricReference As %Integer = "",
 	derivedKey As %SOAP.WSSC.DerivedKeyToken = "") [ ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"WSAddSignatureConfirmation()"
 	If ..SecurityIn'="" {
 		Set pos=0
 		Set signature=..SecurityIn.FindElement("Signature",.pos)
@@ -1941,6 +1981,7 @@ Method WSAddSignatureConfirmation(
 /// The WebMethod, ProcessBody or ProcessBodyNode will still need to quit normally.
 Method ReturnOneWay() [ ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"ReturnOneWay()"
 	Set ..OneWay=1
 }
 
@@ -1953,6 +1994,7 @@ Method ReturnOneWay() [ ServerOnly = 1 ]
 /// contains the web method arguments. 
 Method OnPreWebMethod() [ Abstract, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"OnPreWebMethod()"
 }
 
 /// The OnPostWebMethod method will be called after any web method in a web service.
@@ -1961,6 +2003,7 @@ Method OnPreWebMethod() [ Abstract, ServerOnly = 1 ]
 /// of structures created by OnPreWebMethod.
 Method OnPostWebMethod() [ Abstract, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"OnPostWebMethod()"
 }
 
 /// The ProcessBody method of %SOAP.WebService will be passed the request message body 
@@ -2013,6 +2056,7 @@ Method ProcessBodyNode(
 /// This method is meant to be used by SOAP transport classes.
 Method Reset() [ ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"Reset()"
 	Set ..SoapFault=""
 	Set ..ImportHandler=""
 	Set ..MsgClass=""
@@ -2030,6 +2074,7 @@ Method Reset() [ ServerOnly = 1 ]
 /// the behavior or future operation of this property.		
 Method LogInputHTTPHeaders() [ Internal, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"LogInputHTTPHeaders()"
 	// Nothing to do if no %request object
 	If '$isobject($get(%request)) Quit
 
@@ -2076,6 +2121,7 @@ Method LogInputHTTPHeaders() [ Internal, ServerOnly = 1 ]
 /// the behavior or future operation of this property.		
 Method LogOutputHTTPHeaders() [ Internal, ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="WebService: "_"LogOutputHTTPHeaders()"
 	// Nothing to do if no %response object
 	If '$isobject($get(%response)) Quit
 
