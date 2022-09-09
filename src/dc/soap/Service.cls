@@ -43,6 +43,8 @@ Property SOAPInvoked As %Boolean [ InitialExpression = 0 ];
 /// initialize Business Host object
 Method %OnNew(pConfigName As %String) As %Status
 {
+	Set ^DCSOAP($I(^DCSOAP))="Service: "_"%OnNew("_$G(pConfigName)_")"
+
 	#; %cspServer instantiates us without a config name. We need to defer initialization.
 	Quit:""=$G(pConfigName) $$$OK
 	Quit ##class(Ens.BusinessService)$this.%OnNew(.pConfigName)
@@ -55,6 +57,7 @@ Method OnPreSOAP(
 	action As %String,
 	content) [ Internal ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="Service: "_"OnPreSOAP("_$G(mode)_","_$G(action)_","_$G(content)_")"
 	Set tSC=$$$OK, tThis=$this, tIsMapped=0
 	If ""=..%ConfigName {
 		Set ..SOAPInvoked=1
@@ -118,6 +121,7 @@ Method OnPreSOAP(
 /// copy/assign all important properties from $this to pNewThis
 Method cloneTo(pNewThis As EnsLib.SOAP.Service) As %Status [ Internal ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="Service: "_"cloneTo("_$G(pNewThis)_")"
 	Set pNewThis.SOAPInvoked=..SOAPInvoked
 	Set pNewThis.SoapVersion=..SoapVersion
 	Set pNewThis.ImportHandler=..ImportHandler
@@ -134,6 +138,7 @@ Method OnAuthorize(
 	pAction,
 	pRequest As %CSP.Request) As %Status
 {
+	Set ^DCSOAP($I(^DCSOAP))="Service: "_"OnAuthorize("_$G(pAction)_","_$G(pRequest)_")"
 	Quit $$$OK
 }
 
@@ -141,6 +146,7 @@ Method OnAuthorize(
 /// and should thus never be overridden in a subclass.
 Method OnPostSOAP() [ Internal ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="Service: "_"OnPostSOAP("_")"
 	$$$sysTRACE("Completed SOAP request"_$S($D(%objlasterror):" with error "_$$$StatusDisplayString(%objlasterror),1:" successfully"))
 	#; unregister, restoration of <DISCONNECT>  mode and "external interrupts" is done in OnTeardown()
 }
@@ -162,23 +168,27 @@ Method OnAdapterHTTPResponse(
 	ByRef pMainResponseHeader As %String,
 	ByRef pHeaderExtra As %String) [ Abstract ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="Service: "_"OnAdapterHTTPResponse("_")"
 }
 
 /// Deprecated
 Method GetLastError() As %Status [ Internal ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="Service: "_"GetLastError("_")"
 	Quit %objlasterror
 }
 
 /// Deprecated
 Method GetLastErrorText() As %String [ Internal ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="Service: "_"GetLastErrorText("_")"
 	Quit $$$StatusDisplayString(%objlasterror)
 }
 
 /// Deprecated
 ClassMethod TmpCreate(pName) As Ens.BusinessService [ Internal ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="Service: "_"TmpCreate("_$G(pName)_")"
 	Set tSC=##class(Ens.Director).CreateBusinessService(pName,.tService)
 	If $$$ISERR(tSC) { Set %objlasterror=tSC ZTrap "SOAP" } 
 	Quit tService
@@ -189,6 +199,7 @@ ClassMethod statusReturn(
 	pCode As %String,
 	pStatus As %Status)
 {
+	Set ^DCSOAP($I(^DCSOAP))="Service: "_"statusReturn("_$G(pCode)_","_$G(pStatus)_")"
 	Set tFault=..MakeStatusFault(pCode,$$$FormatMessage("","%ObjectErrors",$$$ERRORCODE($$$SOAPServerError)),pStatus,$$$CurrentClass)
 	Do ..Fault(tFault) ; will send the fault to the SOAP client
 }
@@ -234,6 +245,7 @@ ClassMethod ReturnStatusFault(
 	pCode As %String,
 	pStatus As %Status)
 {
+	Set ^DCSOAP($I(^DCSOAP))="Service: "_"ReturnStatusFault("_$G(pCode)_","_$G(pStatus)_")"
 	Set tFault=..MakeStatusFault(pCode,$$$FormatMessage("","%ObjectErrors",$$$ERRORCODE($$$SOAPServerError)),pStatus,$$$CurrentClass)
 	Do ..ReturnFault(tFault) ; will send the fault to the SOAP client; it will ZTRAP and not return here.
 }
@@ -241,6 +253,7 @@ ClassMethod ReturnStatusFault(
 /* override from superclass to add Set ..%ProcessError so that Adapter can work */
 ClassMethod ReturnFault(fault As %SOAP.Fault) [ ServerOnly = 1 ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="Service: "_"ReturnFault("_$G(fault)_")"
 	Do ..Fault(fault)
 	Set tThis=$G(%cspsoapservice,$$$NULLOREF)
 	If $IsObject(tThis)&&tThis.%Extends("Ens.BusinessService") {
@@ -257,6 +270,7 @@ ClassMethod OnFaultString(
 	pService As EnsLib.SOAP.Service,
 	pSOAPVer As %String = "1.0") As %String [ Internal ]
 {
+	Set ^DCSOAP($I(^DCSOAP))="Service: "_"OnFaultString("_$G(pStatus)_","_$G(pService)_","_$G(pSOAPVer)_")"
 	Set tSecurityHeader=""
 	If ""'=pService.SecurityOut {
 		Set tSC=pService.SecurityOut.XMLExportToString(.tSecurityHeader)
