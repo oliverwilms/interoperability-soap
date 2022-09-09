@@ -2,7 +2,7 @@
 
     zn "%SYS"
     Do ##class(Security.Users).UnExpireUserPasswords("*")
-
+    Do $System.OBJ.Load("/irisdev/app/%ZSTART.mac","ck")
     zn "USER"
     zpm "load /home/irisowner/irisbuild/ -v":1:1
     halt
