@@ -9,7 +9,7 @@ Include (%occInclude, %occSAX, %soap, %xmlDOM)
 /// 
 /// The only supported use of this class is as the super class for a WebService.
 /// Parameters, properties and methods may be used by the application.
-Class dc.soap.WebService Extends (%CSP.Page, %SOAP.WebBase, %SOAP.WebService) [ Abstract, Inheritance = right, System = 3 ]
+Class dc.soap.WebService Extends (%CSP.Page, %SOAP.WebService, %SOAP.WebBase) [ Abstract, Inheritance = right, System = 3 ]
 {
 
 /// LOCATION - the URL not including the web service class name which is the location of the web service.
