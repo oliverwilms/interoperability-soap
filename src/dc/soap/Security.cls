@@ -1,6 +1,16 @@
 Class dc.soap.Security
 {
 
+ClassMethod AddServicesRoleToUnknownUser() As %Status
+{
+	New $NAMESPACE
+	Set $NAMESPACE = "%SYS"
+	Set tRoles = "Services_Role"
+	Set tUsername = "UnknownUser"
+	Set tSC = ##class(Security.Users).AddRoles(tUsername,tRoles)
+	Quit tSC
+}
+
 ClassMethod CreateServicesRole() As %Status
 {
 	New $NAMESPACE
