@@ -11,16 +11,15 @@ ERROR: Service 'iris' failed to build : Build failed
 ```
 ## Workaround
 ```
-DOCKER_BUILDKIT=1 sudo docker build --no-cache --progress=plain --tag testint .
+DOCKER_BUILDKIT=1 sudo docker build --no-cache --progress=plain --tag soapint .
 ```
-## What The Sample Does
+## Why interoperability-soap?
 
-This sample has an interoperability [production](https://github.com/intersystems-community/iris-interoperability-template/blob/master/src/dc/Demo/Production.cls) with an inbound [Reddit Adapter](https://github.com/intersystems-community/iris-interoperability-template/blob/master/src/dc/Reddit/InboundAdapter.cls) which is used by a [Business Service](https://github.com/intersystems-community/iris-interoperability-template/blob/master/src/dc/Demo/RedditService.cls) to read data from Reddit.com.
-It reads from reddit.com/new/.json every 15 sec.
-You can alter both the URL and frequency in the service's settings.
-<img width="1411" alt="Screenshot 2020-10-29 at 19 33 14" src="https://user-images.githubusercontent.com/2781759/97603605-a6d0af00-1a1d-11eb-99cc-481efadb0ec6.png">
+My team needs to migrate a Generic SOAP Service interface from an older HealthShare Health Connect version to our IRIS Interoperability instances running on Red Hat OpenShift Kubernetes Container Platform. We encountered errors and I wanted a tool to help troubleshooting.
 
-The production has a business process with a rule, which filters on news that mentions cats and dogs. The business process then sends this data to a business operation which either saves data to a source folder /output/Dog.txt or /output/Cat.txt.
+I imported Services_Role and related resources. I added Services-Role to UnknownUser. I created a Web Application with dispatch class.
+
+I added a Service to the production.
 <img width="864" alt="Screenshot 2020-10-29 at 19 38 58" src="https://user-images.githubusercontent.com/2781759/97606568-fcf32180-1a20-11eb-90de-4257dd2cf552.png"> 
 
 ## Prerequisites
@@ -30,18 +29,19 @@ Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installi
 
 Open IRIS Namespace with Interoperability Enabled.
 Open Terminal and call:
-USER>zpm "install interoperability-sample"
+USER>zpm "install interoperability-soap"
 
 ## Installation: Docker
 Clone/git pull the repo into any local directory
 
 ```
-$ git clone https://github.com/intersystems-community/iris-interoperability-template.git
+$ git clone https://github.com/oliverwilms/interoperability-soap.git
 ```
 
 Open the terminal in this directory and run:
 
 ```
+DOCKER_BUILDKIT=1 sudo docker build --no-cache --progress=plain --tag soapint .
 $ docker-compose build
 ```
 
