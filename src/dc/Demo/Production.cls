@@ -8,7 +8,7 @@ XData ProductionDefinition
   <ActorPoolSize>2</ActorPoolSize>
   <Item Name="File Passthrough Service" Category="" ClassName="EnsLib.File.PassthroughService" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
-  <Item Name="pricelookup" Category="" ClassName="EnsLib.SOAP.GenericService" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  <Item Name="pricelookup" Category="" ClassName="dc.soap.GenericService" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
 </Production>
 }
