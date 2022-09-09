@@ -6,7 +6,7 @@
 /// In order for the CSP mechanism to work, Web Services derived from this class must be configured either with their configuration name the same as their
 /// class name, or the invoking URL must include ?CfgItem= giving the config item name, or using a CSP application with a DispatchClass configured and the config item name as the next URL piece after the application name.
 /// (Configured Web Services exposed using the SOAP Inbound Adapter may also be invoked with this URL parameter but because each configured Inbound Adapter listens on its own TCP/IP port this parameter is just a safety check for them.)
-Class dc.soap.Service Extends (Ens.BusinessService, dc.soap.WebService, %SOAP.WebService, EnsLib.SOAP.Service) [ System = 4 ]
+Class dc.soap.Service Extends (Ens.BusinessService, %SOAP.WebService, dc.soap.WebService, EnsLib.SOAP.Service) [ System = 4 ]
 {
 
 /// The SOAP name of this service.
