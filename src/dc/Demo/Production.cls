@@ -9,6 +9,7 @@ XData ProductionDefinition
   <Item Name="File Passthrough Service" Category="" ClassName="EnsLib.File.PassthroughService" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
   <Item Name="pricelookup" Category="" ClassName="dc.soap.GenericService" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="EnableStandardRequests">1</Setting>
   </Item>
 </Production>
 }
