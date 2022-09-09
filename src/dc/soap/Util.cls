@@ -6,6 +6,7 @@ ClassMethod Setup() As %Status
 	Set tSC = $$$OK
 	Set tSC = ##class(dc.soap.Security).ImportResources()
 	Set tSC = ##class(dc.soap.Security).ImportRoles()
+	Set tSC = ##class(dc.soap.Security).AddServicesRoleToUnknownUser()
 	Set tSC = ##class(dc.soap.Security).CreateWebAppSoapapp()
 	Set tSC = ##class(dc.soap.Util).StartISCSOAPLog()
 	Quit tSC
