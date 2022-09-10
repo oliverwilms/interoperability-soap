@@ -43,12 +43,6 @@ Open the terminal in this directory and run:
 
 ```
 DOCKER_BUILDKIT=1 sudo docker build --no-cache --progress=plain --tag soapint .
-$ docker-compose build
-```
-
-3. Run the IRIS container with your project:
-
-```
 $ docker-compose up -d
 ```
 
