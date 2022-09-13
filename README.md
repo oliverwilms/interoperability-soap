@@ -52,5 +52,5 @@ $ docker-compose up -d
 
 ## How to use interoperability-soap
 
-Open the [production](http://localhost:57700/csp/user/EnsPortal.ProductionConfig.zen?PRODUCTION=dc.Demo.Production) and start it if it is not running.
+Open the [production](https://interoperability-soap.demo.community.intersystems.com/csp/user/EnsPortal.ProductionConfig.zen?PRODUCTION=dc.Demo.Production) and start it if it is not running.
 I use Postman to send a request to http://abc.xx.yy.zzz:57700/soapapp/pricelookup.
